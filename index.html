@@ -161,6 +161,24 @@
         margin-top: 8px;
       }
 
+      .mobile-fullscreen-option {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin: 4px 0 16px;
+      }
+
+      .mobile-fullscreen-option button {
+        min-width: 220px;
+      }
+
+      #fullscreen-status {
+        min-height: 16px;
+        color: #c2b8a3;
+        font-size: 12px;
+      }
+
       .streak-box {
         background: #282330;
         border: 2px solid #c93b3b;
@@ -381,6 +399,12 @@
           height: clamp(74px, 20vw, 100px);
         }
       }
+
+      @media (pointer: coarse) {
+        .mobile-fullscreen-option {
+          display: flex;
+        }
+      }
     </style>
   </head>
   <body>
@@ -395,6 +419,12 @@
         <div class="controls-hint">
           <strong>PC:</strong> A/D or Arrows + Space/W &nbsp;|&nbsp;
           <strong>Mobile/Tablet:</strong> On-Screen Touch Pad
+        </div>
+        <div class="mobile-fullscreen-option">
+          <button id="fullscreen-btn" class="secondary" type="button">
+            Enter Fullscreen
+          </button>
+          <span id="fullscreen-status" role="status" aria-live="polite"></span>
         </div>
         <div class="mode-cards">
           <div class="mode-card">
@@ -519,6 +549,8 @@
 
       const startNoobBtn = document.getElementById("start-noob-btn");
       const startProBtn = document.getElementById("start-pro-btn");
+      const fullscreenBtn = document.getElementById("fullscreen-btn");
+      const fullscreenStatus = document.getElementById("fullscreen-status");
       const menuQuickBtn = document.getElementById("menu-quick-btn");
       const noobRetryBtn = document.getElementById("noob-retry-btn");
       const noobSkipBtn = document.getElementById("noob-skip-btn");
@@ -580,6 +612,61 @@
           syncDOM();
         }
       }
+
+      function isFullscreen() {
+        return Boolean(
+          document.fullscreenElement || document.webkitFullscreenElement,
+        );
+      }
+
+      function updateFullscreenButton() {
+        if (!fullscreenBtn) return;
+        const active = isFullscreen();
+        fullscreenBtn.textContent = active
+          ? "Exit Fullscreen"
+          : "Enter Fullscreen";
+        fullscreenBtn.classList.toggle("secondary", !active);
+        fullscreenBtn.classList.toggle("pro-btn", active);
+        fullscreenStatus.textContent = active
+          ? "Fullscreen is ready. Choose a game mode."
+          : "";
+      }
+
+      async function toggleFullscreen() {
+        try {
+          if (isFullscreen()) {
+            if (document.exitFullscreen) {
+              await document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            }
+            return;
+          }
+
+          const requestFullscreen =
+            document.documentElement.requestFullscreen ||
+            document.documentElement.webkitRequestFullscreen;
+          if (!requestFullscreen) {
+            fullscreenStatus.textContent =
+              "Fullscreen is not supported by this browser.";
+            return;
+          }
+
+          await requestFullscreen.call(document.documentElement);
+        } catch (error) {
+          fullscreenStatus.textContent =
+            "Fullscreen could not be changed. Please try again.";
+          console.error("Unable to change fullscreen state:", error);
+        }
+      }
+
+      document.addEventListener("fullscreenchange", updateFullscreenButton);
+      document.addEventListener(
+        "webkitfullscreenchange",
+        updateFullscreenButton,
+      );
+      fullscreenBtn?.addEventListener("click", toggleFullscreen);
+      updateFullscreenButton();
 
       window.addEventListener("resize", updateViewportMetrics);
       window.addEventListener("orientationchange", () =>
