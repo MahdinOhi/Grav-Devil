@@ -2,49 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gravity Devil - Noob vs Pro Edition</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Gravity Devil - Fullscreen Responsive Edition</title>
     <style>
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
         user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
         font-family: "Courier New", Courier, monospace;
       }
 
+      html,
       body {
-        background-color: #121016;
-        color: #f4e8c1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        width: 100vw;
+        height: 100dvh;
         overflow: hidden;
-      }
-
-      #app {
-        position: relative;
-        width: 800px;
-        height: 450px;
         background-color: #d89c3e;
-        border: 6px solid #231f20;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+        touch-action: none;
+      }
+
+      /* Full Viewport Game Container - Zero Outer Whitespace */
+      #app {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        background-color: #d89c3e;
         overflow: hidden;
       }
 
-      /* Overlay Screens */
+      /* Responsive Overlay Screens */
       .overlay {
         position: absolute;
         inset: 0;
-        background-color: rgba(26, 22, 31, 0.95);
+        background-color: rgba(26, 22, 31, 0.96);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        z-index: 20;
+        z-index: 30;
         text-align: center;
-        padding: 24px;
+        padding: clamp(12px, 3vw, 32px);
+        overflow-y: auto;
       }
 
       .hidden {
@@ -53,41 +58,46 @@
 
       .overlay h1,
       .overlay h2 {
-        font-size: 42px;
+        font-size: clamp(26px, 5vw, 48px);
         color: #d89c3e;
-        letter-spacing: 3px;
-        margin-bottom: 10px;
+        letter-spacing: 2px;
+        margin-bottom: clamp(6px, 1.5vh, 14px);
         text-transform: uppercase;
       }
 
       .overlay p {
-        font-size: 15px;
+        font-size: clamp(12px, 2vw, 16px);
         color: #c2b8a3;
-        max-width: 540px;
-        line-height: 1.5;
-        margin-bottom: 20px;
+        max-width: 580px;
+        line-height: 1.45;
+        margin-bottom: clamp(12px, 2vh, 22px);
       }
 
       .controls-hint {
         background: #282330;
         border: 2px solid #d89c3e;
-        padding: 10px 18px;
-        font-size: 13px;
-        margin-bottom: 22px;
+        padding: clamp(6px, 1.2vh, 12px) clamp(10px, 2vw, 20px);
+        font-size: clamp(11px, 1.6vw, 14px);
+        margin-bottom: clamp(12px, 2.5vh, 24px);
         color: #fff;
+        max-width: 92vw;
       }
 
       .mode-cards {
         display: flex;
-        gap: 20px;
-        margin-top: 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: clamp(10px, 2vw, 22px);
+        width: 100%;
+        max-width: 600px;
       }
 
       .mode-card {
         background: #241e2b;
         border: 2px solid #574b63;
-        padding: 16px 20px;
-        width: 250px;
+        padding: clamp(12px, 2vh, 20px);
+        flex: 1 1 220px;
+        max-width: 280px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -98,18 +108,17 @@
 
       .mode-card:hover {
         border-color: #d89c3e;
-        transform: translateY(-3px);
       }
 
       .mode-card h3 {
-        font-size: 22px;
+        font-size: clamp(18px, 3vw, 24px);
         color: #f4e8c1;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
       }
 
       .mode-card p {
-        font-size: 13px;
-        margin-bottom: 16px;
+        font-size: clamp(11px, 1.6vw, 13px);
+        margin-bottom: 12px;
         color: #b5ab99;
       }
 
@@ -117,8 +126,8 @@
         background-color: #d89c3e;
         color: #1a161f;
         border: none;
-        padding: 12px 24px;
-        font-size: 16px;
+        padding: clamp(10px, 1.8vh, 14px) clamp(16px, 3vw, 26px);
+        font-size: clamp(13px, 2vw, 16px);
         font-weight: bold;
         cursor: pointer;
         text-transform: uppercase;
@@ -127,9 +136,8 @@
           background-color 0.15s;
       }
 
-      button:hover {
-        background-color: #f3b552;
-        transform: scale(1.03);
+      button:active {
+        transform: scale(0.96);
       }
 
       button.secondary {
@@ -138,79 +146,87 @@
         border: 2px solid #d89c3e;
       }
 
-      button.secondary:hover {
-        background-color: #50455e;
-      }
-
       button.pro-btn {
         background-color: #c93b3b;
         color: #fff;
       }
 
-      button.pro-btn:hover {
-        background-color: #e04a4a;
-      }
-
       .btn-row {
         display: flex;
-        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
         margin-top: 8px;
       }
 
       .streak-box {
         background: #282330;
         border: 2px solid #c93b3b;
-        padding: 14px 28px;
-        margin-bottom: 20px;
+        padding: clamp(10px, 2vh, 18px) clamp(20px, 4vw, 32px);
+        margin-bottom: 16px;
       }
 
       .streak-box .big-num {
-        font-size: 44px;
+        font-size: clamp(32px, 6vw, 48px);
         color: #f3b552;
         font-weight: bold;
         display: block;
       }
 
-      /* HUD */
+      /* Top HUD */
       #hud {
         position: absolute;
-        top: 10px;
-        left: 14px;
-        right: 14px;
+        top: max(8px, env(safe-area-inset-top));
+        left: max(10px, env(safe-area-inset-left));
+        right: max(10px, env(safe-area-inset-right));
         display: flex;
         justify-content: space-between;
+        align-items: center;
         font-weight: bold;
-        font-size: 14px;
+        font-size: clamp(11px, 1.8vw, 16px);
         color: #1a161f;
-        z-index: 10;
-        pointer-events: none;
-        background: rgba(244, 232, 193, 0.45);
-        padding: 5px 12px;
+        z-index: 15;
+        background: rgba(244, 232, 193, 0.55);
+        padding: 6px 12px;
         border: 2px solid #1a161f;
+      }
+
+      #menu-quick-btn {
+        padding: 4px 10px;
+        font-size: clamp(10px, 1.5vw, 13px);
+        background: #1a161f;
+        color: #d89c3e;
+        pointer-events: auto;
       }
 
       #taunt-banner {
         position: absolute;
-        top: 44px;
+        top: clamp(42px, 8vh, 58px);
         width: 100%;
         text-align: center;
-        font-size: 18px;
+        font-size: clamp(13px, 2.2vw, 20px);
         font-weight: bold;
         color: #6e0d0d;
-        z-index: 10;
+        z-index: 12;
         pointer-events: none;
+        padding: 0 12px;
       }
 
       /* DOM Game World */
       #game-world {
-        position: relative;
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
+        overflow: hidden;
       }
 
       .platform {
         position: absolute;
+        top: 0;
+        left: 0;
         background-color: #1a161f;
+        will-change: transform, width, height;
       }
 
       .platform.triggered-fall {
@@ -220,78 +236,148 @@
       /* Player Character */
       #player {
         position: absolute;
-        width: 24px;
-        height: 24px;
+        top: 0;
+        left: 0;
         background-color: #1a161f;
-        z-index: 5;
+        z-index: 6;
+        will-change: transform, width, height;
       }
 
       #player::before,
       #player::after {
         content: "";
         position: absolute;
-        top: 5px;
-        width: 4px;
-        height: 6px;
+        top: 20%;
+        width: 18%;
+        height: 25%;
         background-color: #d89c3e;
       }
 
       #player::before {
-        left: 5px;
+        left: 20%;
       }
       #player::after {
-        right: 5px;
+        right: 20%;
       }
 
       #player.flipped::before,
       #player.flipped::after {
         top: auto;
-        bottom: 5px;
+        bottom: 20%;
       }
 
       /* Exit Door */
       #door {
         position: absolute;
-        width: 32px;
-        height: 46px;
+        top: 0;
+        left: 0;
         background-color: #f4e8c1;
-        border: 4px solid #1a161f;
+        border: 3px solid #1a161f;
         border-bottom: none;
-        z-index: 4;
+        z-index: 5;
+        will-change: transform, width, height;
       }
 
       #door::after {
         content: "";
         position: absolute;
-        right: 5px;
-        top: 20px;
-        width: 5px;
-        height: 5px;
+        right: 15%;
+        top: 45%;
+        width: 16%;
+        height: 12%;
         background-color: #1a161f;
         border-radius: 50%;
       }
 
-      /* Pure CSS Spikes */
+      /* Responsive Spikes */
       .spike-row {
         position: absolute;
+        top: 0;
+        left: 0;
         display: flex;
-        z-index: 4;
+        z-index: 5;
+        will-change: transform, width, height;
       }
 
-      .spike-down {
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 14px solid #1a161f;
+      .spike-unit {
+        flex: 1;
+        height: 100%;
+        background-color: #1a161f;
       }
 
-      .spike-up {
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 14px solid #1a161f;
+      .spike-down .spike-unit {
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+
+      .spike-up .spike-unit {
+        clip-path: polygon(50% 0, 0 100%, 100% 100%);
+      }
+
+      /* On-Screen Touch / Click Playable Controls */
+      #touch-controls {
+        position: absolute;
+        left: max(14px, env(safe-area-inset-left));
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        z-index: 20;
+        pointer-events: none;
+      }
+
+      .dpad-group,
+      .action-group {
+        display: flex;
+        gap: clamp(10px, 2.5vw, 18px);
+        pointer-events: auto;
+      }
+
+      .ctrl-btn {
+        width: clamp(58px, 13vmin, 84px);
+        height: clamp(58px, 13vmin, 84px);
+        background-color: rgba(26, 22, 31, 0.45);
+        border: 3px solid rgba(244, 232, 193, 0.75);
+        color: #f4e8c1;
+        border-radius: 14px;
+        font-size: clamp(18px, 4vmin, 26px);
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        backdrop-filter: blur(2px);
+        transition:
+          background-color 0.08s,
+          transform 0.08s;
+      }
+
+      .ctrl-btn.jump-btn {
+        width: clamp(68px, 15vmin, 96px);
+        height: clamp(68px, 15vmin, 96px);
+        background-color: rgba(201, 59, 59, 0.55);
+      }
+
+      .ctrl-btn.active {
+        background-color: rgba(244, 232, 193, 0.85);
+        color: #1a161f;
+        transform: scale(0.92);
+      }
+
+      /* Portrait Mode Optimization: Reserve dedicated bottom control dock so buttons never block platforms */
+      @media (orientation: portrait) {
+        #touch-controls {
+          bottom: max(18px, env(safe-area-inset-bottom));
+        }
+        .ctrl-btn {
+          width: clamp(64px, 17vw, 88px);
+          height: clamp(64px, 17vw, 88px);
+          background-color: rgba(244, 232, 193, 0.22);
+        }
+        .ctrl-btn.jump-btn {
+          width: clamp(74px, 20vw, 100px);
+          height: clamp(74px, 20vw, 100px);
+        }
       }
     </style>
   </head>
@@ -301,13 +387,12 @@
       <div id="landing-page" class="overlay">
         <h1>Gravity Devil</h1>
         <p>
-          Procedurally generated gravity traps. Every jump is mathematically
-          solvable—until gravity betrays you. Choose your mode:
+          Procedurally generated gravity traps. Full-screen adaptive physics for
+          PC, Tablet, and Mobile (Portrait & Landscape).
         </p>
         <div class="controls-hint">
-          <strong>A / D</strong> or <strong>Arrows</strong>: Move &nbsp;|&nbsp;
-          <strong>W / Space / Up</strong>: Jump &nbsp;|&nbsp;
-          <strong>Esc</strong>: Mode Menu
+          <strong>PC:</strong> A/D or Arrows + Space/W &nbsp;|&nbsp;
+          <strong>Mobile/Tablet:</strong> On-Screen Touch Pad
         </div>
         <div class="mode-cards">
           <div class="mode-card">
@@ -333,12 +418,13 @@
         </div>
       </div>
 
-      <!-- 2. HUD -->
+      <!-- 2. Top HUD -->
       <div id="hud">
-        <span id="mode-indicator">Mode: NOOB</span>
-        <span id="level-indicator">Level: 1</span>
+        <span id="mode-indicator">NOOB</span>
+        <span id="level-indicator">Lvl: 1</span>
         <span id="gravity-indicator">G: +0.55</span>
         <span id="status-counter">Deaths: 0</span>
+        <button id="menu-quick-btn">Menu</button>
       </div>
       <div id="taunt-banner"></div>
 
@@ -350,7 +436,24 @@
         <div id="spikes-container"></div>
       </div>
 
-      <!-- 4. Noob Mode Fail Overlay (Retry or Skip to Next Level) -->
+      <!-- 4. Mobile & Tablet Multi-Touch Controls -->
+      <div id="touch-controls">
+        <div class="dpad-group">
+          <div id="btn-left" class="ctrl-btn" aria-label="Move Left">
+            &larr;
+          </div>
+          <div id="btn-right" class="ctrl-btn" aria-label="Move Right">
+            &rarr;
+          </div>
+        </div>
+        <div class="action-group">
+          <div id="btn-jump" class="ctrl-btn jump-btn" aria-label="Jump">
+            JUMP
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Noob Mode Fail Overlay -->
       <div id="noob-fail-overlay" class="overlay hidden">
         <h2>YOU FELL FOR IT</h2>
         <p id="noob-fail-taunt">Gravity had other plans.</p>
@@ -360,12 +463,12 @@
             Skip to Next Level
           </button>
         </div>
-        <div class="btn-row" style="margin-top: 14px">
+        <div class="btn-row">
           <button id="noob-menu-btn" class="secondary">Change Mode</button>
         </div>
       </div>
 
-      <!-- 5. Noob Mode Level Clear Overlay -->
+      <!-- 6. Noob Mode Level Clear Overlay -->
       <div id="noob-win-overlay" class="overlay hidden">
         <h2>LEVEL CLEARED</h2>
         <p id="noob-win-stats"></p>
@@ -377,7 +480,7 @@
         </div>
       </div>
 
-      <!-- 6. Pro Mode Permadeath Game Over Overlay -->
+      <!-- 7. Pro Mode Game Over Overlay -->
       <div id="pro-gameover-overlay" class="overlay hidden">
         <h2 style="color: #e04a4a">RUN TERMINATED</h2>
         <p id="pro-fail-taunt">One mistake is all it takes in Pro Mode.</p>
@@ -396,7 +499,15 @@
     </div>
 
     <script>
-      // UI Overlays & Elements
+      // Internal Logical Game Resolution (Physics runs in 800x450 logical units, projected to 100% full screen)
+      const LOGICAL_W = 800;
+      const LOGICAL_H = 450;
+      let viewW = window.innerWidth;
+      let viewH = window.innerHeight;
+      let scaleX = viewW / LOGICAL_W;
+      let scaleY = viewH / LOGICAL_H;
+
+      // UI References
       const landingPage = document.getElementById("landing-page");
       const noobFailOverlay = document.getElementById("noob-fail-overlay");
       const noobWinOverlay = document.getElementById("noob-win-overlay");
@@ -406,6 +517,7 @@
 
       const startNoobBtn = document.getElementById("start-noob-btn");
       const startProBtn = document.getElementById("start-pro-btn");
+      const menuQuickBtn = document.getElementById("menu-quick-btn");
       const noobRetryBtn = document.getElementById("noob-retry-btn");
       const noobSkipBtn = document.getElementById("noob-skip-btn");
       const noobMenuBtn = document.getElementById("noob-menu-btn");
@@ -413,6 +525,10 @@
       const noobReplaySameBtn = document.getElementById("noob-replay-same-btn");
       const proRestartBtn = document.getElementById("pro-restart-btn");
       const proMenuBtn = document.getElementById("pro-menu-btn");
+
+      const btnLeft = document.getElementById("btn-left");
+      const btnRight = document.getElementById("btn-right");
+      const btnJump = document.getElementById("btn-jump");
 
       const playerEl = document.getElementById("player");
       const doorEl = document.getElementById("door");
@@ -431,10 +547,10 @@
       const proStreakValue = document.getElementById("pro-streak-value");
       const proBestValue = document.getElementById("pro-best-value");
 
-      // Game State
+      // Input & State
       const keys = { left: false, right: false, jump: false };
       let gameRunning = false;
-      let gameMode = "noob"; // 'noob' or 'pro'
+      let gameMode = "noob";
       let levelNum = 1;
       let noobDeaths = 0;
       let proStreak = 0;
@@ -452,7 +568,23 @@
         "The PRNG sends its regards.",
       ];
 
-      // --- 1. MULBERRY32 SEEDED PRNG ---
+      // --- 1. DYNAMIC VIEWPORT SCALING (Portrait & Landscape Zero Whitespace) ---
+      function updateViewportMetrics() {
+        viewW = window.innerWidth;
+        viewH = window.innerHeight;
+        scaleX = viewW / LOGICAL_W;
+        scaleY = viewH / LOGICAL_H;
+        if (currentLevelData) {
+          syncDOM();
+        }
+      }
+
+      window.addEventListener("resize", updateViewportMetrics);
+      window.addEventListener("orientationchange", () =>
+        setTimeout(updateViewportMetrics, 100),
+      );
+
+      // --- 2. MULBERRY32 SEEDED PRNG ---
       function createRNG(seed) {
         return function () {
           let t = (seed += 0x6d2b79f5);
@@ -462,7 +594,7 @@
         };
       }
 
-      // --- 2. KINEMATIC-CONSTRAINED PROCEDURAL LEVEL GENERATOR ---
+      // --- 3. KINEMATIC-CONSTRAINED PROCEDURAL LEVEL GENERATOR ---
       let currentLevelData = null;
       let player = {};
       let gravity = 0.55;
@@ -488,14 +620,15 @@
         const genTriggers = [];
 
         let cursorX = 20;
-        let cursorY = Math.floor(270 + rng() * 70);
+        let cursorY = Math.floor(250 + rng() * 65);
         const startW = 105;
 
+        // Solid platforms extend deep (h: 180) so portrait screens look grounded
         genPlatforms.push({
           x: cursorX,
           y: cursorY,
           w: startW,
-          h: 28,
+          h: 180,
           type: "solid",
           vy: 0,
           falling: false,
@@ -515,18 +648,18 @@
             115,
             Math.max(48, Math.floor(maxJumpDist * (0.38 + rng() * 0.3))),
           );
-          const maxStepUp = Math.min(75, maxJumpHeight * 0.65);
+          const maxStepUp = Math.min(70, maxJumpHeight * 0.62);
           const deltaY = Math.floor((rng() - 0.52) * maxStepUp * 1.4);
 
           const nextX = cursorX + safeGap;
-          let nextY = Math.max(175, Math.min(375, cursorY + deltaY));
+          let nextY = Math.max(170, Math.min(340, cursorY + deltaY));
           const platW = Math.floor(105 + rng() * 45);
 
           const trap = trapTypes[Math.floor(rng() * trapTypes.length)];
 
           if (trap === "gravity_flip" && nextX + platW < 620) {
             const flipX = cursorX + Math.floor(safeGap * 0.45);
-            const ceilY = 42;
+            const ceilY = 46;
             genTriggers.push({
               x: flipX,
               w: platW + 20,
@@ -565,35 +698,35 @@
 
             genPlatforms.push({
               x: nextX + platW - 20,
-              y: 330,
+              y: 315,
               w: 85,
-              h: 28,
+              h: 180,
               type: "solid",
               vy: 0,
               falling: false,
             });
 
             cursorX = nextX + platW + 65;
-            cursorY = 330;
+            cursorY = 315;
           } else if (trap === "trap_fall") {
             const fakeW = 70;
             genPlatforms.push({
               x: nextX,
               y: nextY,
               w: fakeW,
-              h: 24,
+              h: 26,
               type: "trap_fall",
               vy: 0,
               falling: false,
             });
 
             const followX = nextX + fakeW + 32;
-            const followY = Math.min(380, nextY + 20);
+            const followY = Math.min(345, nextY + 20);
             genPlatforms.push({
               x: followX,
               y: followY,
               w: 85,
-              h: 28,
+              h: 180,
               type: "solid",
               vy: 0,
               falling: false,
@@ -603,7 +736,7 @@
             cursorY = followY;
           } else if (trap === "heavy_drop") {
             const triggerX = cursorX + Math.floor(safeGap * 0.4);
-            const lowerY = Math.min(390, cursorY + 55);
+            const lowerY = Math.min(350, cursorY + 50);
 
             genTriggers.push({
               x: triggerX,
@@ -616,7 +749,7 @@
               x: nextX - 10,
               y: lowerY,
               w: platW,
-              h: 28,
+              h: 180,
               type: "solid",
               vy: 0,
               falling: false,
@@ -629,7 +762,7 @@
               x: nextX,
               y: nextY,
               w: platW,
-              h: 28,
+              h: 180,
               type: "solid",
               vy: 0,
               falling: false,
@@ -655,29 +788,29 @@
 
         const finalGap = 52;
         const finalX = Math.min(620, cursorX + finalGap);
-        const finalW = 800 - finalX - 16;
-        const finalY = Math.max(220, Math.min(365, cursorY));
+        const finalW = LOGICAL_W - finalX - 14;
+        const finalY = Math.max(210, Math.min(335, cursorY));
 
         genPlatforms.push({
           x: finalX,
           y: finalY,
           w: finalW,
-          h: 32,
+          h: 180,
           type: "solid",
           vy: 0,
           falling: false,
         });
 
         const isRunawayDoor = rng() > 0.35 && finalW >= 120;
-        const doorStartX = isRunawayDoor ? finalX + 28 : finalX + finalW - 48;
-        const doorTargetX = finalX + finalW - 46;
+        const doorStartX = isRunawayDoor ? finalX + 26 : finalX + finalW - 46;
+        const doorTargetX = finalX + finalW - 44;
 
         return {
           seed: numericSeed,
           baseG,
           vRun,
           vJump,
-          startX: 42,
+          startX: 40,
           startY: genPlatforms[0].y - 26,
           platforms: genPlatforms,
           spikes: genSpikes,
@@ -695,8 +828,8 @@
       }
 
       function updateHUD() {
-        modeIndicator.textContent = `Mode: ${gameMode.toUpperCase()}`;
-        levelIndicator.textContent = `Level: ${levelNum}`;
+        modeIndicator.textContent = gameMode.toUpperCase();
+        levelIndicator.textContent = `Lvl: ${levelNum}`;
         const sign = gravity > 0 ? "+" : "";
         gravityIndicator.textContent = `G: ${sign}${gravity.toFixed(2)}`;
         if (gameMode === "noob") {
@@ -707,6 +840,7 @@
       }
 
       function loadCurrentLevel() {
+        updateViewportMetrics();
         currentLevelData = generateProceduralLevel(levelNum, sessionSalt);
         gravity = currentLevelData.baseG;
 
@@ -738,8 +872,6 @@
         platforms.forEach((p) => {
           const el = document.createElement("div");
           el.className = "platform";
-          el.style.width = p.w + "px";
-          el.style.height = p.h + "px";
           platformsContainer.appendChild(el);
           p.el = el;
         });
@@ -747,15 +879,39 @@
         spikesContainer.innerHTML = "";
         spikes.forEach((s) => {
           const row = document.createElement("div");
-          row.className = "spike-row";
-          row.style.left = s.x + "px";
-          row.style.top = s.y + "px";
+          row.className = `spike-row ${s.dir === "down" ? "spike-down" : "spike-up"}`;
           for (let i = 0; i < s.count; i++) {
             const sp = document.createElement("div");
-            sp.className = s.dir === "down" ? "spike-down" : "spike-up";
+            sp.className = "spike-unit";
             row.appendChild(sp);
           }
           spikesContainer.appendChild(row);
+          s.el = row;
+        });
+      }
+
+      // Projects logical 800x450 coordinates directly onto any screen size/ratio
+      function syncDOM() {
+        playerEl.style.width = `${player.w * scaleX}px`;
+        playerEl.style.height = `${player.h * scaleY}px`;
+        playerEl.style.transform = `translate3d(${player.x * scaleX}px, ${player.y * scaleY}px, 0)`;
+
+        doorEl.style.width = `${door.w * scaleX}px`;
+        doorEl.style.height = `${door.h * scaleY}px`;
+        doorEl.style.transform = `translate3d(${door.x * scaleX}px, ${door.y * scaleY}px, 0)`;
+
+        platforms.forEach((p) => {
+          if (!p.el) return;
+          p.el.style.width = `${p.w * scaleX + 1}px`;
+          p.el.style.height = `${p.h * scaleY}px`;
+          p.el.style.transform = `translate3d(${p.x * scaleX}px, ${p.y * scaleY}px, 0)`;
+        });
+
+        spikes.forEach((s) => {
+          if (!s.el) return;
+          s.el.style.width = `${s.w * scaleX}px`;
+          s.el.style.height = `${s.h * scaleY}px`;
+          s.el.style.transform = `translate3d(${s.x * scaleX}px, ${s.y * scaleY}px, 0)`;
         });
       }
 
@@ -772,9 +928,12 @@
         keys.left = false;
         keys.right = false;
         keys.jump = false;
+        btnLeft.classList.remove("active");
+        btnRight.classList.remove("active");
+        btnJump.classList.remove("active");
       }
 
-      // --- 3. FAILURE & CLEAR LOGIC BY MODE ---
+      // --- 4. FAILURE & CLEAR LOGIC BY MODE ---
       function handlePlayerFailure() {
         gameRunning = false;
         resetKeys();
@@ -787,7 +946,6 @@
           noobFailTaunt.textContent = randomTaunt;
           noobFailOverlay.classList.remove("hidden");
         } else {
-          // PRO MODE: Game ends immediately and shows streak of cleared levels
           if (proStreak > bestProStreak) {
             bestProStreak = proStreak;
             localStorage.setItem("gravity_devil_best_pro", bestProStreak);
@@ -801,18 +959,16 @@
 
       function handleLevelCleared() {
         if (gameMode === "pro") {
-          // PRO MODE: Increment streak and immediately jump into next level
           proStreak++;
           if (proStreak > bestProStreak) {
             bestProStreak = proStreak;
             localStorage.setItem("gravity_devil_best_pro", bestProStreak);
           }
           levelNum++;
-          tauntBanner.textContent = `Streak: ${proStreak}! Jumping to Level ${levelNum}...`;
+          tauntBanner.textContent = `Streak: ${proStreak}! Level ${levelNum}...`;
           loadCurrentLevel();
           requestAnimationFrame(updatePhysics);
         } else {
-          // NOOB MODE: Show clear overlay with choice to advance or replay
           gameRunning = false;
           resetKeys();
           noobWinStats.textContent = `Cleared Level ${levelNum} | Total Deaths: ${noobDeaths}`;
@@ -823,18 +979,15 @@
       function updatePhysics() {
         if (!gameRunning) return;
 
-        // 1. Horizontal Movement
         if (keys.left) player.vx = -player.speed;
         else if (keys.right) player.vx = player.speed;
         else player.vx = 0;
 
-        // 2. Jump Impulse
         if (keys.jump && player.grounded) {
           player.vy = gravity > 0 ? -player.jumpForce : player.jumpForce * 0.88;
           player.grounded = false;
         }
 
-        // 3. Procedural Gravity Triggers
         triggers.forEach((t) => {
           if (!t.fired && player.x + player.w > t.x && player.x < t.x + t.w) {
             t.fired = true;
@@ -857,7 +1010,6 @@
           }
         });
 
-        // 4. Runaway Door Troll
         if (door.runaway && !door.trolled) {
           const dist = Math.hypot(
             player.x + player.w / 2 - (door.x + door.w / 2),
@@ -870,7 +1022,6 @@
           }
         }
 
-        // 5. Falling Trap Platforms
         platforms.forEach((p) => {
           if (p.type === "trap_fall" && !p.falling) {
             if (
@@ -889,12 +1040,11 @@
           }
         });
 
-        // 6. Apply Gravity & Horizontal Position
         player.vy += gravity;
         player.x += player.vx;
 
         if (player.x < 0) player.x = 0;
-        if (player.x + player.w > 800) player.x = 800 - player.w;
+        if (player.x + player.w > LOGICAL_W) player.x = LOGICAL_W - player.w;
 
         platforms.forEach((p) => {
           if (aabb(player, p)) {
@@ -903,7 +1053,6 @@
           }
         });
 
-        // 7. Apply Vertical Position & Platform Collisions
         player.y += player.vy;
         player.grounded = false;
 
@@ -921,7 +1070,6 @@
           }
         });
 
-        // 8. Check Spike Collisions
         for (const s of spikes) {
           if (aabb(player, s)) {
             handlePlayerFailure();
@@ -929,13 +1077,11 @@
           }
         }
 
-        // 9. Check Out-of-Bounds Void
-        if (player.y > 465 || player.y < -45) {
+        if (player.y > LOGICAL_H + 20 || player.y < -45) {
           handlePlayerFailure();
           return;
         }
 
-        // 10. Check Door Win Condition
         if (aabb(player, door)) {
           handleLevelCleared();
           return;
@@ -945,15 +1091,7 @@
         requestAnimationFrame(updatePhysics);
       }
 
-      function syncDOM() {
-        playerEl.style.transform = `translate(${player.x}px, ${player.y}px)`;
-        doorEl.style.transform = `translate(${door.x}px, ${door.y}px)`;
-        platforms.forEach((p) => {
-          p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
-        });
-      }
-
-      // --- 4. START & BUTTON HANDLERS ---
+      // --- 5. SESSION & MENU HANDLERS ---
       function startNewSession(selectedMode) {
         gameMode = selectedMode;
         levelNum = 1;
@@ -987,8 +1125,8 @@
 
       startNoobBtn.addEventListener("click", () => startNewSession("noob"));
       startProBtn.addEventListener("click", () => startNewSession("pro"));
+      menuQuickBtn.addEventListener("click", returnToMenu);
 
-      // Noob Mode Fail Buttons
       noobRetryBtn.addEventListener("click", () => {
         noobFailOverlay.classList.add("hidden");
         tauntBanner.textContent = "Second chance granted.";
@@ -1008,7 +1146,6 @@
 
       noobMenuBtn.addEventListener("click", returnToMenu);
 
-      // Noob Mode Win Buttons
       noobNextBtn.addEventListener("click", () => {
         noobWinOverlay.classList.add("hidden");
         levelNum++;
@@ -1026,25 +1163,63 @@
         requestAnimationFrame(updatePhysics);
       });
 
-      // Pro Mode Game Over Buttons
       proRestartBtn.addEventListener("click", () => startNewSession("pro"));
       proMenuBtn.addEventListener("click", returnToMenu);
 
-      // Keyboard Controls
+      // --- 6. KEYBOARD & MULTI-TOUCH MOBILE CONTROLS ---
       window.addEventListener("keydown", (e) => {
-        if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = true;
-        if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = true;
-        if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space")
+        if (e.code === "ArrowLeft" || e.code === "KeyA") {
+          keys.left = true;
+          btnLeft.classList.add("active");
+        }
+        if (e.code === "ArrowRight" || e.code === "KeyD") {
+          keys.right = true;
+          btnRight.classList.add("active");
+        }
+        if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space") {
           keys.jump = true;
+          btnJump.classList.add("active");
+        }
         if (e.code === "Escape") returnToMenu();
       });
 
       window.addEventListener("keyup", (e) => {
-        if (e.code === "ArrowLeft" || e.code === "KeyA") keys.left = false;
-        if (e.code === "ArrowRight" || e.code === "KeyD") keys.right = false;
-        if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space")
+        if (e.code === "ArrowLeft" || e.code === "KeyA") {
+          keys.left = false;
+          btnLeft.classList.remove("active");
+        }
+        if (e.code === "ArrowRight" || e.code === "KeyD") {
+          keys.right = false;
+          btnRight.classList.remove("active");
+        }
+        if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space") {
           keys.jump = false;
+          btnJump.classList.remove("active");
+        }
       });
+
+      // Pointer Events handle simultaneous multi-touch on phones/tablets and mouse clicks on desktop
+      function bindControlButton(element, keyName) {
+        const activate = (e) => {
+          e.preventDefault();
+          keys[keyName] = true;
+          element.classList.add("active");
+        };
+        const deactivate = (e) => {
+          e.preventDefault();
+          keys[keyName] = false;
+          element.classList.remove("active");
+        };
+
+        element.addEventListener("pointerdown", activate);
+        element.addEventListener("pointerup", deactivate);
+        element.addEventListener("pointerleave", deactivate);
+        element.addEventListener("pointercancel", deactivate);
+      }
+
+      bindControlButton(btnLeft, "left");
+      bindControlButton(btnRight, "right");
+      bindControlButton(btnJump, "jump");
     </script>
   </body>
 </html>
