@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    favicon
+    <!-- favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
     <title>Grav Devil</title>
     <style>
@@ -17,6 +17,7 @@
         user-select: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
         font-family: "Courier New", Courier, monospace;
       }
 
@@ -37,6 +38,7 @@
         height: 100dvh;
         background-color: #d89c3e;
         overflow: hidden;
+        touch-action: none;
       }
 
       /* Responsive Overlay Screens */
@@ -333,76 +335,117 @@
         clip-path: polygon(50% 0, 0 100%, 100% 100%);
       }
 
-      /* On-Screen Touch / Click Playable Controls */
+      /* Ergonomic On-Screen Touch / Click Controls */
       #touch-controls {
         position: absolute;
-        left: max(14px, env(safe-area-inset-left));
-        right: max(14px, env(safe-area-inset-right));
-        bottom: max(14px, env(safe-area-inset-bottom));
+        left: max(20px, calc(env(safe-area-inset-left) + 14px));
+        right: max(20px, calc(env(safe-area-inset-right) + 14px));
+        bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px));
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
         z-index: 20;
         pointer-events: none;
+        touch-action: none;
       }
 
       .dpad-group,
       .action-group {
         display: flex;
-        gap: clamp(10px, 2.5vw, 18px);
+        align-items: center;
+        gap: clamp(14px, 3vw, 22px);
         pointer-events: auto;
+        touch-action: none;
+      }
+
+      .dpad-group {
+        padding: 6px;
+        border-radius: 22px;
       }
 
       .ctrl-btn {
-        width: clamp(58px, 13vmin, 84px);
-        height: clamp(58px, 13vmin, 84px);
-        background-color: rgba(26, 22, 31, 0.45);
-        border: 3px solid rgba(244, 232, 193, 0.75);
+        width: clamp(64px, 13vmin, 86px);
+        height: clamp(64px, 13vmin, 86px);
+        background-color: rgba(26, 22, 31, 0.52);
+        border: 3px solid rgba(244, 232, 193, 0.8);
         color: #f4e8c1;
-        border-radius: 14px;
-        font-size: clamp(18px, 4vmin, 26px);
+        border-radius: 18px;
+        font-size: clamp(22px, 4.5vmin, 30px);
         font-weight: bold;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        backdrop-filter: blur(2px);
+        backdrop-filter: blur(3px);
+        touch-action: none;
         transition:
-          background-color 0.08s,
-          transform 0.08s;
+          background-color 0.06s,
+          transform 0.06s;
       }
 
       .ctrl-btn.jump-btn {
-        width: clamp(68px, 15vmin, 96px);
-        height: clamp(68px, 15vmin, 96px);
-        background-color: rgba(201, 59, 59, 0.55);
+        width: clamp(76px, 15.5vmin, 100px);
+        height: clamp(76px, 15.5vmin, 100px);
+        border-radius: 50%;
+        background-color: rgba(201, 59, 59, 0.65);
+        font-size: clamp(16px, 3vmin, 22px);
+        letter-spacing: 1px;
       }
 
       .ctrl-btn.active {
-        background-color: rgba(244, 232, 193, 0.85);
+        background-color: rgba(244, 232, 193, 0.9);
         color: #1a161f;
-        transform: scale(0.92);
+        transform: scale(0.93);
       }
 
-      /* Portrait Mode Optimization: Reserve dedicated bottom control dock so buttons never block platforms */
-      @media (orientation: portrait) {
-        #touch-controls {
-          bottom: max(18px, env(safe-area-inset-bottom));
-        }
-        .ctrl-btn {
-          width: clamp(64px, 17vw, 88px);
-          height: clamp(64px, 17vw, 88px);
-          background-color: rgba(244, 232, 193, 0.22);
-        }
-        .ctrl-btn.jump-btn {
-          width: clamp(74px, 20vw, 100px);
-          height: clamp(74px, 20vw, 100px);
-        }
-      }
-
+      /* Coarse Pointer (Phones & Tablets): Larger, Gamer-Ergonomic Thumb Zones */
       @media (pointer: coarse) {
         .mobile-fullscreen-option {
           display: flex;
+        }
+
+        #touch-controls {
+          left: max(22px, calc(env(safe-area-inset-left) + 18px));
+          right: max(22px, calc(env(safe-area-inset-right) + 18px));
+          bottom: max(28px, calc(env(safe-area-inset-bottom) + 20px));
+        }
+
+        .ctrl-btn {
+          width: clamp(76px, 19vh, 96px);
+          height: clamp(76px, 19vh, 96px);
+          font-size: clamp(26px, 6vh, 34px);
+        }
+
+        .ctrl-btn.jump-btn {
+          width: clamp(90px, 23vh, 112px);
+          height: clamp(90px, 23vh, 112px);
+          font-size: clamp(18px, 4vh, 22px);
+          margin-bottom: 6px;
+        }
+      }
+
+      /* Portrait Phone Layout: Lifted slightly higher off the bottom bezel for thumb comfort */
+      @media (pointer: coarse) and (orientation: portrait) {
+        #touch-controls {
+          left: max(18px, calc(env(safe-area-inset-left) + 12px));
+          right: max(18px, calc(env(safe-area-inset-right) + 12px));
+          bottom: max(46px, calc(env(safe-area-inset-bottom) + 36px));
+        }
+
+        .dpad-group {
+          gap: 16px;
+        }
+
+        .ctrl-btn {
+          width: clamp(78px, 21vw, 98px);
+          height: clamp(78px, 21vw, 98px);
+          background-color: rgba(26, 22, 31, 0.58);
+        }
+
+        .ctrl-btn.jump-btn {
+          width: clamp(92px, 25vw, 116px);
+          height: clamp(92px, 25vw, 116px);
+          margin-bottom: 8px;
         }
       }
     </style>
@@ -470,7 +513,7 @@
 
       <!-- 4. Mobile & Tablet Multi-Touch Controls -->
       <div id="touch-controls">
-        <div class="dpad-group">
+        <div id="dpad-group" class="dpad-group">
           <div id="btn-left" class="ctrl-btn" aria-label="Move Left">
             &larr;
           </div>
@@ -534,6 +577,8 @@
       // Internal Logical Game Resolution (Physics runs in 800x450 logical units, projected to 100% full screen)
       const LOGICAL_W = 800;
       const LOGICAL_H = 450;
+      const FIXED_STEP = 1000 / 60; // Fixed 60Hz simulation step (fixes 90Hz/120Hz mobile speed-up)
+
       let viewW = window.innerWidth;
       let viewH = window.innerHeight;
       let scaleX = viewW / LOGICAL_W;
@@ -560,6 +605,7 @@
       const proRestartBtn = document.getElementById("pro-restart-btn");
       const proMenuBtn = document.getElementById("pro-menu-btn");
 
+      const dpadGroup = document.getElementById("dpad-group");
       const btnLeft = document.getElementById("btn-left");
       const btnRight = document.getElementById("btn-right");
       const btnJump = document.getElementById("btn-jump");
@@ -581,9 +627,16 @@
       const proStreakValue = document.getElementById("pro-streak-value");
       const proBestValue = document.getElementById("pro-best-value");
 
-      // Input & State
+      // Input & Game State
       const keys = { left: false, right: false, jump: false };
+      let jumpBufferFrames = 0;
+      let coyoteFrames = 0;
+
       let gameRunning = false;
+      let rafId = null;
+      let lastFrameTime = 0;
+      let physicsAccumulator = 0;
+
       let gameMode = "noob";
       let levelNum = 1;
       let noobDeaths = 0;
@@ -591,7 +644,10 @@
       let bestProStreak = Number(
         localStorage.getItem("gravity_devil_best_pro") || 0,
       );
-      let sessionSalt = Math.floor(Math.random() * 90000) + 10000;
+
+      let seedCounter = 0;
+      let currentLevelSeed = 0;
+      let lastLevelSignature = "";
 
       const taunts = [
         "Mathematically solvable. Emotionally devastating.",
@@ -602,7 +658,7 @@
         "The PRNG sends its regards.",
       ];
 
-      // --- 1. DYNAMIC VIEWPORT SCALING (Portrait & Landscape Zero Whitespace) ---
+      // --- 1. DYNAMIC VIEWPORT SCALING ---
       function updateViewportMetrics() {
         viewW = window.innerWidth;
         viewH = window.innerHeight;
@@ -673,12 +729,40 @@
         setTimeout(updateViewportMetrics, 100),
       );
 
-      // --- 2. MULBERRY32 SEEDED PRNG ---
+      // --- 2. CRYPTOGRAPHIC SEEDING + MULBERRY32 PRNG ---
+      function generateFreshSeed() {
+        seedCounter = (seedCounter + 1) >>> 0;
+        let rand = 0;
+        if (window.crypto && window.crypto.getRandomValues) {
+          const buf = new Uint32Array(1);
+          window.crypto.getRandomValues(buf);
+          rand = buf[0];
+        } else {
+          rand = Math.floor(Math.random() * 0xffffffff) >>> 0;
+        }
+        // Mix entropy with timestamp and counter so consecutive seeds never collide
+        let mixed =
+          (rand ^
+            (Date.now() & 0xffffffff) ^
+            Math.imul(seedCounter, 0x9e3779b1)) >>>
+          0;
+        if (mixed === currentLevelSeed || mixed === 0) {
+          mixed = (mixed + 0x6d2b79f5) >>> 0;
+        }
+        return mixed;
+      }
+
       function createRNG(seed) {
+        let state = seed >>> 0;
+        // Warm-up mix to eliminate initial-state correlation
+        state = Math.imul(state ^ (state >>> 16), 0x85ebca6b) >>> 0;
+        state = Math.imul(state ^ (state >>> 13), 0xc2b2ae35) >>> 0;
+        state = (state ^ (state >>> 16)) >>> 0;
+
         return function () {
-          let t = (seed += 0x6d2b79f5);
-          t = Math.imul(t ^ (t >>> 15), t | 1);
-          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          state = (state + 0x6d2b79f5) >>> 0;
+          let t = Math.imul(state ^ (state >>> 15), 1 | state);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
           return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
         };
       }
@@ -692,11 +776,10 @@
       let triggers = [];
       let door = {};
 
-      function generateProceduralLevel(lvl, salt) {
-        const numericSeed = lvl * 9973 + salt;
-        const rng = createRNG(numericSeed);
+      function generateProceduralLevel(seed) {
+        const rng = createRNG(seed);
 
-        const baseG = +(0.44 + rng() * 0.3).toFixed(2);
+        const baseG = +(0.42 + rng() * 0.34).toFixed(2);
         const vRun = 4.2;
         const vJump = 11.2;
 
@@ -708,50 +791,61 @@
         const genSpikes = [];
         const genTriggers = [];
 
-        let cursorX = 20;
-        let cursorY = Math.floor(250 + rng() * 65);
-        const startW = 105;
+        let cursorX = 16;
+        let cursorY = Math.floor(210 + rng() * 115);
+        const startW = Math.floor(88 + rng() * 26);
 
-        // Solid platforms extend deep (h: 180) so portrait screens look grounded
         genPlatforms.push({
           x: cursorX,
           y: cursorY,
           w: startW,
-          h: 180,
+          h: 220,
           type: "solid",
           vy: 0,
           falling: false,
         });
         cursorX += startW;
 
-        const numChunks = 3;
+        const numChunks = rng() > 0.45 ? 4 : 3;
         const trapTypes = [
           "trap_fall",
           "gravity_flip",
           "heavy_drop",
           "spike_hop",
         ];
+        let prevTrap = "";
+        const chosenTraps = [];
 
         for (let i = 0; i < numChunks; i++) {
           const safeGap = Math.min(
-            115,
-            Math.max(48, Math.floor(maxJumpDist * (0.38 + rng() * 0.3))),
+            110,
+            Math.max(46, Math.floor(maxJumpDist * (0.35 + rng() * 0.32))),
           );
-          const maxStepUp = Math.min(70, maxJumpHeight * 0.62);
-          const deltaY = Math.floor((rng() - 0.52) * maxStepUp * 1.4);
+          const maxStepUp = Math.min(72, maxJumpHeight * 0.62);
+          const deltaY = Math.floor((rng() - 0.5) * maxStepUp * 1.5);
 
           const nextX = cursorX + safeGap;
-          let nextY = Math.max(170, Math.min(340, cursorY + deltaY));
-          const platW = Math.floor(105 + rng() * 45);
+          let nextY = Math.max(165, Math.min(345, cursorY + deltaY));
+          const platW = Math.floor(92 + rng() * 52);
 
-          const trap = trapTypes[Math.floor(rng() * trapTypes.length)];
+          // Avoid picking the exact same trap twice in a row
+          const eligibleTraps = trapTypes.filter((t) => {
+            if (t === prevTrap) return false;
+            if (t === "gravity_flip" && nextX + platW >= 580) return false;
+            return true;
+          });
+          const trap =
+            eligibleTraps[Math.floor(rng() * eligibleTraps.length)] ||
+            "spike_hop";
+          prevTrap = trap;
+          chosenTraps.push(trap);
 
-          if (trap === "gravity_flip" && nextX + platW < 620) {
-            const flipX = cursorX + Math.floor(safeGap * 0.45);
-            const ceilY = 46;
+          if (trap === "gravity_flip") {
+            const flipX = cursorX + Math.floor(safeGap * 0.42);
+            const ceilY = Math.floor(42 + rng() * 18);
             genTriggers.push({
               x: flipX,
-              w: platW + 20,
+              w: platW + 18,
               type: "flip_up",
               fired: false,
             });
@@ -759,16 +853,16 @@
             genPlatforms.push({
               x: nextX,
               y: ceilY,
-              w: platW + 25,
+              w: platW + 22,
               h: 24,
               type: "ceiling",
               vy: 0,
               falling: false,
             });
 
-            if (rng() > 0.35) {
+            if (rng() > 0.3) {
               genSpikes.push({
-                x: nextX + Math.floor(platW * 0.55),
+                x: nextX + Math.floor(platW * (0.4 + rng() * 0.2)),
                 y: ceilY + 24,
                 count: 2,
                 w: 32,
@@ -777,28 +871,29 @@
               });
             }
 
-            const restoreX = nextX + platW - 10;
+            const restoreX = nextX + platW - 12;
             genTriggers.push({
               x: restoreX,
-              w: 40,
+              w: 42,
               type: "restore_down",
               fired: false,
             });
 
+            const landingY = Math.floor(290 + rng() * 45);
             genPlatforms.push({
-              x: nextX + platW - 20,
-              y: 315,
-              w: 85,
-              h: 180,
+              x: nextX + platW - 18,
+              y: landingY,
+              w: 82,
+              h: 220,
               type: "solid",
               vy: 0,
               falling: false,
             });
 
-            cursorX = nextX + platW + 65;
-            cursorY = 315;
+            cursorX = nextX + platW + 64;
+            cursorY = landingY;
           } else if (trap === "trap_fall") {
-            const fakeW = 70;
+            const fakeW = Math.floor(62 + rng() * 18);
             genPlatforms.push({
               x: nextX,
               y: nextY,
@@ -809,23 +904,24 @@
               falling: false,
             });
 
-            const followX = nextX + fakeW + 32;
-            const followY = Math.min(345, nextY + 20);
+            const followX = nextX + fakeW + Math.floor(28 + rng() * 14);
+            const followY = Math.min(348, nextY + Math.floor(12 + rng() * 24));
+            const followW = Math.floor(76 + rng() * 20);
             genPlatforms.push({
               x: followX,
               y: followY,
-              w: 85,
-              h: 180,
+              w: followW,
+              h: 220,
               type: "solid",
               vy: 0,
               falling: false,
             });
 
-            cursorX = followX + 85;
+            cursorX = followX + followW;
             cursorY = followY;
           } else if (trap === "heavy_drop") {
-            const triggerX = cursorX + Math.floor(safeGap * 0.4);
-            const lowerY = Math.min(350, cursorY + 50);
+            const triggerX = cursorX + Math.floor(safeGap * 0.38);
+            const lowerY = Math.min(352, cursorY + Math.floor(42 + rng() * 26));
 
             genTriggers.push({
               x: triggerX,
@@ -838,7 +934,7 @@
               x: nextX - 10,
               y: lowerY,
               w: platW,
-              h: 180,
+              h: 220,
               type: "solid",
               vy: 0,
               falling: false,
@@ -851,18 +947,20 @@
               x: nextX,
               y: nextY,
               w: platW,
-              h: 180,
+              h: 220,
               type: "solid",
               vy: 0,
               falling: false,
             });
 
-            if (platW >= 110) {
+            if (platW >= 96) {
+              const spikeCount = platW >= 125 && rng() > 0.5 ? 3 : 2;
+              const spikeW = spikeCount * 16;
               genSpikes.push({
-                x: nextX + Math.floor(platW * 0.42),
+                x: nextX + Math.floor((platW - spikeW) * (0.35 + rng() * 0.3)),
                 y: nextY - 14,
-                count: 2,
-                w: 32,
+                count: spikeCount,
+                w: spikeW,
                 h: 14,
                 dir: "up",
               });
@@ -872,34 +970,38 @@
             cursorY = nextY;
           }
 
-          if (cursorX > 560) break;
+          if (cursorX > 575) break;
         }
 
-        const finalGap = 52;
-        const finalX = Math.min(620, cursorX + finalGap);
-        const finalW = LOGICAL_W - finalX - 14;
-        const finalY = Math.max(210, Math.min(335, cursorY));
+        const finalGap = Math.floor(46 + rng() * 18);
+        const finalX = Math.min(625, cursorX + finalGap);
+        const finalW = Math.max(96, LOGICAL_W - finalX - 14);
+        const finalY = Math.max(
+          195,
+          Math.min(340, cursorY + Math.floor((rng() - 0.5) * 40)),
+        );
 
         genPlatforms.push({
           x: finalX,
           y: finalY,
           w: finalW,
-          h: 180,
+          h: 220,
           type: "solid",
           vy: 0,
           falling: false,
         });
 
-        const isRunawayDoor = rng() > 0.35 && finalW >= 120;
-        const doorStartX = isRunawayDoor ? finalX + 26 : finalX + finalW - 46;
+        const isRunawayDoor = rng() > 0.35 && finalW >= 115;
+        const doorStartX = isRunawayDoor ? finalX + 24 : finalX + finalW - 46;
         const doorTargetX = finalX + finalW - 44;
 
         return {
-          seed: numericSeed,
+          seed,
+          signature: chosenTraps.join("-"),
           baseG,
           vRun,
           vJump,
-          startX: 40,
+          startX: 34,
           startY: genPlatforms[0].y - 26,
           platforms: genPlatforms,
           spikes: genSpikes,
@@ -928,10 +1030,26 @@
         }
       }
 
-      function loadCurrentLevel() {
+      function loadCurrentLevel(useNewSeed = true) {
         updateViewportMetrics();
-        currentLevelData = generateProceduralLevel(levelNum, sessionSalt);
+
+        if (useNewSeed || !currentLevelSeed) {
+          let candidate = null;
+          // Ensure the new level has a distinct trap pattern from the previous level
+          for (let attempt = 0; attempt < 5; attempt++) {
+            currentLevelSeed = generateFreshSeed();
+            candidate = generateProceduralLevel(currentLevelSeed);
+            if (candidate.signature !== lastLevelSignature) break;
+          }
+          currentLevelData = candidate;
+          lastLevelSignature = currentLevelData.signature;
+        } else {
+          currentLevelData = generateProceduralLevel(currentLevelSeed);
+        }
+
         gravity = currentLevelData.baseG;
+        jumpBufferFrames = 0;
+        coyoteFrames = 0;
 
         player = {
           x: currentLevelData.startX,
@@ -979,7 +1097,6 @@
         });
       }
 
-      // Projects logical 800x450 coordinates directly onto any screen size/ratio
       function syncDOM() {
         playerEl.style.width = `${player.w * scaleX}px`;
         playerEl.style.height = `${player.h * scaleY}px`;
@@ -1017,14 +1134,33 @@
         keys.left = false;
         keys.right = false;
         keys.jump = false;
+        jumpBufferFrames = 0;
+        dpadPointers.clear();
+        jumpPointers.clear();
         btnLeft.classList.remove("active");
         btnRight.classList.remove("active");
         btnJump.classList.remove("active");
       }
 
+      function stopGameLoop() {
+        gameRunning = false;
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      }
+
+      function startGameLoop() {
+        stopGameLoop();
+        gameRunning = true;
+        lastFrameTime = performance.now();
+        physicsAccumulator = 0;
+        rafId = requestAnimationFrame(gameLoop);
+      }
+
       // --- 4. FAILURE & CLEAR LOGIC BY MODE ---
       function handlePlayerFailure() {
-        gameRunning = false;
+        stopGameLoop();
         resetKeys();
         const randomTaunt =
           taunts[(levelNum + noobDeaths + proStreak) % taunts.length];
@@ -1055,26 +1191,40 @@
           }
           levelNum++;
           tauntBanner.textContent = `Streak: ${proStreak}! Level ${levelNum}...`;
-          loadCurrentLevel();
-          requestAnimationFrame(updatePhysics);
+          loadCurrentLevel(true);
         } else {
-          gameRunning = false;
+          stopGameLoop();
           resetKeys();
           noobWinStats.textContent = `Cleared Level ${levelNum} | Total Deaths: ${noobDeaths}`;
           noobWinOverlay.classList.remove("hidden");
         }
       }
 
-      function updatePhysics() {
-        if (!gameRunning) return;
-
-        if (keys.left) player.vx = -player.speed;
-        else if (keys.right) player.vx = player.speed;
+      function stepPhysics() {
+        if (keys.left && !keys.right) player.vx = -player.speed;
+        else if (keys.right && !keys.left) player.vx = player.speed;
         else player.vx = 0;
 
-        if (keys.jump && player.grounded) {
-          player.vy = gravity > 0 ? -player.jumpForce : player.jumpForce * 0.88;
-          player.grounded = false;
+        if (keys.jump) {
+          jumpBufferFrames = Math.max(jumpBufferFrames, 3);
+        }
+
+        if (player.grounded) {
+          coyoteFrames = 6;
+        } else if (coyoteFrames > 0) {
+          coyoteFrames--;
+        }
+
+        if (jumpBufferFrames > 0) {
+          if (coyoteFrames > 0) {
+            player.vy =
+              gravity > 0 ? -player.jumpForce : player.jumpForce * 0.88;
+            player.grounded = false;
+            coyoteFrames = 0;
+            jumpBufferFrames = 0;
+          } else {
+            jumpBufferFrames--;
+          }
         }
 
         triggers.forEach((t) => {
@@ -1162,22 +1312,44 @@
         for (const s of spikes) {
           if (aabb(player, s)) {
             handlePlayerFailure();
-            return;
+            return false;
           }
         }
 
         if (player.y > LOGICAL_H + 20 || player.y < -45) {
           handlePlayerFailure();
-          return;
+          return false;
         }
 
         if (aabb(player, door)) {
           handleLevelCleared();
-          return;
+          return false;
+        }
+
+        return true;
+      }
+
+      function gameLoop(now) {
+        if (!gameRunning) return;
+
+        const dt = Math.min(100, now - lastFrameTime);
+        lastFrameTime = now;
+        physicsAccumulator += dt;
+
+        while (physicsAccumulator >= FIXED_STEP) {
+          const keepGoing = stepPhysics();
+          physicsAccumulator -= FIXED_STEP;
+          if (!keepGoing) {
+            if (gameRunning) {
+              physicsAccumulator = 0;
+              break;
+            }
+            return;
+          }
         }
 
         syncDOM();
-        requestAnimationFrame(updatePhysics);
+        rafId = requestAnimationFrame(gameLoop);
       }
 
       // --- 5. SESSION & MENU HANDLERS ---
@@ -1186,7 +1358,6 @@
         levelNum = 1;
         noobDeaths = 0;
         proStreak = 0;
-        sessionSalt = Math.floor(Math.random() * 90000) + 10000;
 
         landingPage.classList.add("hidden");
         noobFailOverlay.classList.add("hidden");
@@ -1198,13 +1369,12 @@
             ? "PRO MODE: 1 Life. Clear levels to build your streak."
             : "NOOB MODE: Retry or skip levels anytime.";
 
-        loadCurrentLevel();
-        gameRunning = true;
-        requestAnimationFrame(updatePhysics);
+        loadCurrentLevel(true);
+        startGameLoop();
       }
 
       function returnToMenu() {
-        gameRunning = false;
+        stopGameLoop();
         resetKeys();
         noobFailOverlay.classList.add("hidden");
         noobWinOverlay.classList.add("hidden");
@@ -1219,18 +1389,16 @@
       noobRetryBtn.addEventListener("click", () => {
         noobFailOverlay.classList.add("hidden");
         tauntBanner.textContent = "Second chance granted.";
-        loadCurrentLevel();
-        gameRunning = true;
-        requestAnimationFrame(updatePhysics);
+        loadCurrentLevel(false); // Reuse same seed
+        startGameLoop();
       });
 
       noobSkipBtn.addEventListener("click", () => {
         noobFailOverlay.classList.add("hidden");
         levelNum++;
         tauntBanner.textContent = `Skipped to Level ${levelNum}.`;
-        loadCurrentLevel();
-        gameRunning = true;
-        requestAnimationFrame(updatePhysics);
+        loadCurrentLevel(true); // Generate fresh seed
+        startGameLoop();
       });
 
       noobMenuBtn.addEventListener("click", returnToMenu);
@@ -1239,17 +1407,15 @@
         noobWinOverlay.classList.add("hidden");
         levelNum++;
         tauntBanner.textContent = "";
-        loadCurrentLevel();
-        gameRunning = true;
-        requestAnimationFrame(updatePhysics);
+        loadCurrentLevel(true); // Generate fresh seed
+        startGameLoop();
       });
 
       noobReplaySameBtn.addEventListener("click", () => {
         noobWinOverlay.classList.add("hidden");
         tauntBanner.textContent = "Replaying same level seed.";
-        loadCurrentLevel();
-        gameRunning = true;
-        requestAnimationFrame(updatePhysics);
+        loadCurrentLevel(false); // Reuse same seed
+        startGameLoop();
       });
 
       proRestartBtn.addEventListener("click", () => startNewSession("pro"));
@@ -1266,6 +1432,7 @@
           btnRight.classList.add("active");
         }
         if (e.code === "ArrowUp" || e.code === "KeyW" || e.code === "Space") {
+          if (!keys.jump) jumpBufferFrames = 7;
           keys.jump = true;
           btnJump.classList.add("active");
         }
@@ -1287,28 +1454,85 @@
         }
       });
 
-      // Pointer Events handle simultaneous multi-touch on phones/tablets and mouse clicks on desktop
-      function bindControlButton(element, keyName) {
-        const activate = (e) => {
-          e.preventDefault();
-          keys[keyName] = true;
-          element.classList.add("active");
-        };
-        const deactivate = (e) => {
-          e.preventDefault();
-          keys[keyName] = false;
-          element.classList.remove("active");
-        };
+      // D-Pad Multi-Touch with Pointer Capture + Smooth Thumb Sliding
+      const dpadPointers = new Map();
 
-        element.addEventListener("pointerdown", activate);
-        element.addEventListener("pointerup", deactivate);
-        element.addEventListener("pointerleave", deactivate);
-        element.addEventListener("pointercancel", deactivate);
+      function syncDpadState() {
+        let leftActive = false;
+        let rightActive = false;
+        for (const dir of dpadPointers.values()) {
+          if (dir === "left") leftActive = true;
+          if (dir === "right") rightActive = true;
+        }
+        keys.left = leftActive;
+        keys.right = rightActive;
+        btnLeft.classList.toggle("active", leftActive);
+        btnRight.classList.toggle("active", rightActive);
       }
 
-      bindControlButton(btnLeft, "left");
-      bindControlButton(btnRight, "right");
-      bindControlButton(btnJump, "jump");
+      function resolveDpadDirection(clientX) {
+        const leftRect = btnLeft.getBoundingClientRect();
+        const rightRect = btnRight.getBoundingClientRect();
+        const midpoint = (leftRect.right + rightRect.left) / 2;
+        return clientX < midpoint ? "left" : "right";
+      }
+
+      dpadGroup.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        if (dpadGroup.setPointerCapture) {
+          dpadGroup.setPointerCapture(e.pointerId);
+        }
+        dpadPointers.set(e.pointerId, resolveDpadDirection(e.clientX));
+        syncDpadState();
+      });
+
+      dpadGroup.addEventListener("pointermove", (e) => {
+        if (!dpadPointers.has(e.pointerId)) return;
+        e.preventDefault();
+        dpadPointers.set(e.pointerId, resolveDpadDirection(e.clientX));
+        syncDpadState();
+      });
+
+      function releaseDpadPointer(e) {
+        if (!dpadPointers.has(e.pointerId)) return;
+        e.preventDefault();
+        dpadPointers.delete(e.pointerId);
+        syncDpadState();
+      }
+
+      dpadGroup.addEventListener("pointerup", releaseDpadPointer);
+      dpadGroup.addEventListener("pointercancel", releaseDpadPointer);
+      dpadGroup.addEventListener("lostpointercapture", releaseDpadPointer);
+
+      // Jump Button Multi-Touch with Pointer Capture + Jump Buffering
+      const jumpPointers = new Set();
+
+      btnJump.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        if (btnJump.setPointerCapture) {
+          btnJump.setPointerCapture(e.pointerId);
+        }
+        jumpPointers.add(e.pointerId);
+        keys.jump = true;
+        jumpBufferFrames = 7;
+        btnJump.classList.add("active");
+      });
+
+      function releaseJumpPointer(e) {
+        if (!jumpPointers.has(e.pointerId)) return;
+        e.preventDefault();
+        jumpPointers.delete(e.pointerId);
+        if (jumpPointers.size === 0) {
+          keys.jump = false;
+          btnJump.classList.remove("active");
+        }
+      }
+
+      btnJump.addEventListener("pointerup", releaseJumpPointer);
+      btnJump.addEventListener("pointercancel", releaseJumpPointer);
+      btnJump.addEventListener("lostpointercapture", releaseJumpPointer);
+
+      window.addEventListener("blur", resetKeys);
     </script>
   </body>
 </html>
